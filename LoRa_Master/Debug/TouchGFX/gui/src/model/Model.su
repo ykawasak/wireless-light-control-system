@@ -1,0 +1,3 @@
+../TouchGFX/gui/src/model/Model.cpp:7:1:Model::Model()	16	static
+../TouchGFX/gui/src/model/Model.cpp:12:6:void Model::tick()	16	static
+../TouchGFX/gui/src/model/Model.cpp:17:6:void Model::sendLoraCommand(uint8_t)	16	static

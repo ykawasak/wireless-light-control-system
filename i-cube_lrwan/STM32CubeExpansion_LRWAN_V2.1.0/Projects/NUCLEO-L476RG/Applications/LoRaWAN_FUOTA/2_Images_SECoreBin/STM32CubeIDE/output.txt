@@ -1,0 +1,4 @@
+prebuild.sh : started
+prepareimage with windows executable
+ C:/Users/Admin/STM32CubeIDE/workspace_1.19.0/i-cube_lrwan/STM32CubeExpansion_LRWAN_V2.1.0/Middlewares/ST/STM32_Secure_Engine/Utilities/KeysAndImages/win/prepareimage/prepareimage.exe
+SECBOOT_ECCDSA_WITHOUT_ENCRYPT_SHA256 selected

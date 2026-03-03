@@ -1,0 +1,49 @@
+21:50:10 **** Incremental Build of configuration Debug for project LoRa_Master ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H750xx -DUSE_PWR_LDO_SUPPLY -DSTM32H750xIB -c -I"C:/Users/Admin/STM32CubeIDE/workspace_1.19.0/LoRa_Master/Drivers/BSP/STM32H750B-DK" -I"C:/Users/Admin/STM32CubeIDE/workspace_1.19.0/LoRa_Master/Drivers/BSP/Components" -I../Core/Inc -I../TouchGFX/App -I../TouchGFX/target/generated -I../TouchGFX/target -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/ST/touchgfx/framework/include -I../TouchGFX/generated/fonts/include -I../TouchGFX/generated/gui_generated/include -I../TouchGFX/generated/images/include -I../TouchGFX/generated/texts/include -I../TouchGFX/generated/videos/include -I../TouchGFX/gui/include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:39: warning: "QSPI_BASE_ADDRESS" redefined
+   39 | #define QSPI_BASE_ADDRESS    0x90000000UL
+      | 
+In file included from ../Core/Src/main.c:25:
+C:/Users/Admin/STM32CubeIDE/workspace_1.19.0/LoRa_Master/Drivers/BSP/STM32H750B-DK/stm32h750b_discovery_qspi.h:184: note: this is the location of the previous definition
+  184 | #define QSPI_BASE_ADDRESS          0x90000000
+      | 
+arm-none-eabi-g++ -o "LoRa_Master.elf" @"objects.list"  -l:libtouchgfx-float-abi-hard.a -mcpu=cortex-m7 -T"C:\Users\Admin\STM32CubeIDE\workspace_1.19.0\LoRa_Master\STM32H750XBHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LoRa_Master.map" -Wl,--gc-sections -static -L"C:\Users\Admin\STM32CubeIDE\workspace_1.19.0\LoRa_Master\Middlewares\ST\touchgfx\lib\core\cortex_m7\gcc" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: LoRa_Master.elf
+ 
+arm-none-eabi-size  LoRa_Master.elf 
+arm-none-eabi-objdump -h -S LoRa_Master.elf  > "LoRa_Master.list"
+   text	   data	    bss	    dec	    hex	filename
+ 439944	    828	 287408	 728180	  b1c74	LoRa_Master.elf
+Finished building: default.size.stdout
+ 
+Finished building: LoRa_Master.list
+ 
+21:51:40 **** Incremental Build of configuration Debug for project LoRa_Master ****
+make -j8 all 
+arm-none-eabi-size  LoRa_Master.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 439944	    828	 287408	 728180	  b1c74	LoRa_Master.elf
+Finished building: default.size.stdout
+ 
+21:55:48 **** Incremental Build of configuration Debug for project LoRa_Master ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32H750xx -DUSE_PWR_LDO_SUPPLY -DSTM32H750xIB -c -I"C:/Users/Admin/STM32CubeIDE/workspace_1.19.0/LoRa_Master/Drivers/BSP/STM32H750B-DK" -I"C:/Users/Admin/STM32CubeIDE/workspace_1.19.0/LoRa_Master/Drivers/BSP/Components" -I../Core/Inc -I../TouchGFX/App -I../TouchGFX/target/generated -I../TouchGFX/target -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/ST/touchgfx/framework/include -I../TouchGFX/generated/fonts/include -I../TouchGFX/generated/gui_generated/include -I../TouchGFX/generated/images/include -I../TouchGFX/generated/texts/include -I../TouchGFX/generated/videos/include -I../TouchGFX/gui/include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:39: warning: "QSPI_BASE_ADDRESS" redefined
+   39 | #define QSPI_BASE_ADDRESS    0x90000000UL
+      | 
+In file included from ../Core/Src/main.c:25:
+C:/Users/Admin/STM32CubeIDE/workspace_1.19.0/LoRa_Master/Drivers/BSP/STM32H750B-DK/stm32h750b_discovery_qspi.h:184: note: this is the location of the previous definition
+  184 | #define QSPI_BASE_ADDRESS          0x90000000
+      | 
+arm-none-eabi-g++ -o "LoRa_Master.elf" @"objects.list"  -l:libtouchgfx-float-abi-hard.a -mcpu=cortex-m7 -T"C:\Users\Admin\STM32CubeIDE\workspace_1.19.0\LoRa_Master\STM32H750XBHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LoRa_Master.map" -Wl,--gc-sections -static -L"C:\Users\Admin\STM32CubeIDE\workspace_1.19.0\LoRa_Master\Middlewares\ST\touchgfx\lib\core\cortex_m7\gcc" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: LoRa_Master.elf
+ 
+arm-none-eabi-size  LoRa_Master.elf 
+arm-none-eabi-objdump -h -S LoRa_Master.elf  > "LoRa_Master.list"
+   text	   data	    bss	    dec	    hex	filename
+ 439944	    828	 287408	 728180	  b1c74	LoRa_Master.elf
+Finished building: default.size.stdout
+ 
+Finished building: LoRa_Master.list
+ 
