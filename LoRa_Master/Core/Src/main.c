@@ -21,12 +21,12 @@
 #include "string.h"
 #include "cmsis_os.h"
 #include "app_touchgfx.h"
-#include <stdio.h>
-#include "stm32h750b_discovery_qspi.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "string.h"
+#include <stdio.h>
+#include "stm32h750b_discovery_qspi.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,7 +77,6 @@ FDCAN_HandleTypeDef hfdcan2;
 
 LTDC_HandleTypeDef hltdc;
 
-// QSPI_HandleTypeDef hqspi;
 extern QSPI_HandleTypeDef hqspi;
 
 RTC_HandleTypeDef hrtc;
@@ -151,6 +150,7 @@ static void MPU_Config(void);
 int main(void) {
 
 	/* USER CODE BEGIN 1 */
+	__enable_irq();
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -174,27 +174,69 @@ int main(void) {
 
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
-	MX_ADC1_Init();
-	MX_ADC2_Init();
-	MX_ADC3_Init();
-	MX_ETH_Init();
-	MX_FDCAN1_Init();
-	MX_FDCAN2_Init();
+	//MX_ADC1_Init();
+	//MX_ADC2_Init();
+	//MX_ADC3_Init();
+	//MX_ETH_Init();
+	//MX_FDCAN1_Init();
+	//MX_FDCAN2_Init();
 	MX_FMC_Init();
 	MX_LTDC_Init();
-	MX_QUADSPI_Init();
-	MX_RTC_Init();
-	MX_SAI2_Init();
-	MX_SDMMC1_MMC_Init();
-	MX_SPI2_Init();
-	MX_USART3_UART_Init();
-	MX_USB_OTG_FS_PCD_Init();
-	MX_CRC_Init();
-	MX_USART2_UART_Init();
-	MX_TouchGFX_Init();
+	//MX_QUADSPI_Init();
+	//MX_RTC_Init();
+	//MX_SAI2_Init();
+	//MX_SDMMC1_MMC_Init();
+	//MX_SPI2_Init();
+	//MX_USART3_UART_Init();
+	//MX_USB_OTG_FS_PCD_Init();
+	//MX_CRC_Init();
+	//MX_USART2_UART_Init();
+	//MX_TouchGFX_Init();
 	/* Call PreOsInit function */
-	MX_TouchGFX_PreOSInit();
+	//MX_TouchGFX_PreOSInit();
 	/* USER CODE BEGIN 2 */
+	GPIO_InitTypeDef g = { 0 };
+	g.Mode = GPIO_MODE_OUTPUT_PP;
+	g.Pull = GPIO_NOPULL;
+	g.Speed = GPIO_SPEED_FREQ_LOW;
+
+	g.Pin = LCD_DISPD7_Pin;
+	HAL_GPIO_Init(LCD_DISPD7_GPIO_Port, &g);
+	HAL_GPIO_WritePin(LCD_DISPD7_GPIO_Port, LCD_DISPD7_Pin, GPIO_PIN_SET);
+
+	g.Pin = LCD_BL_Pin;
+	HAL_GPIO_Init(LCD_BL_GPIO_Port, &g);
+	HAL_GPIO_WritePin(LCD_BL_GPIO_Port, LCD_BL_Pin, GPIO_PIN_SET);
+
+	HAL_GPIO_WritePin(LCD_RST_GPIO_Port, LCD_RST_Pin, GPIO_PIN_RESET);
+	for (volatile uint32_t d = 0; d < 500000; d++) {
+	}
+	HAL_GPIO_WritePin(LCD_RST_GPIO_Port, LCD_RST_Pin, GPIO_PIN_SET);
+	for (volatile uint32_t d = 0; d < 1000000; d++) {
+	}
+
+	BSP_QSPI_Init_t qspi_initParams;
+	qspi_initParams.InterfaceMode = MT25TL01G_QPI_MODE;
+	qspi_initParams.TransferRate = MT25TL01G_STR_TRANSFER;
+	qspi_initParams.DualFlashMode = MT25TL01G_DUALFLASH_ENABLE;
+
+	if (BSP_QSPI_Init(0, &qspi_initParams) != BSP_ERROR_NONE) {
+		Error_Handler();
+	}
+	if (BSP_QSPI_EnableMemoryMappedMode(0) != BSP_ERROR_NONE) {
+		Error_Handler();
+	}
+
+	for (int i = 0; i < 480 * 272; i++) {
+		*((volatile uint16_t*) 0x24020000 + i) = 0xF800;
+	}
+
+	uint32_t t0 = HAL_GetTick();
+	volatile uint32_t t1;
+
+	while (1) {
+		t1 = HAL_GetTick();
+	}
 	/* USER CODE END 2 */
 
 	/* Init scheduler */
@@ -214,7 +256,7 @@ int main(void) {
 
 	/* Create the queue(s) */
 	/* creation of loraQueue */
-	loraQueueHandle = osMessageQueueNew(16, sizeof(uint8_t),
+	loraQueueHandle = osMessageQueueNew(16, sizeof(uint16_t),
 			&loraQueue_attributes);
 
 	/* USER CODE BEGIN RTOS_QUEUES */
@@ -317,25 +359,8 @@ void SystemClock_Config(void) {
  * @retval None
  */
 void PeriphCommonClock_Config(void) {
-	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = { 0 };
 
-	/** Initializes the peripherals clock
-	 */
-	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC;
-	PeriphClkInitStruct.PLL2.PLL2M = 2;
-	PeriphClkInitStruct.PLL2.PLL2N = 12;
-	PeriphClkInitStruct.PLL2.PLL2P = 5;
-	PeriphClkInitStruct.PLL2.PLL2Q = 2;
-	PeriphClkInitStruct.PLL2.PLL2R = 2;
-	PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_3;
-	PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOMEDIUM;
-	PeriphClkInitStruct.PLL2.PLL2FRACN = 0;
-	PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLL2;
-	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
-		Error_Handler();
-	}
 }
-
 /**
  * @brief ADC1 Initialization Function
  * @param None
@@ -733,13 +758,11 @@ static void MX_LTDC_Init(void) {
 	pLayerCfg.WindowY0 = 0;
 	pLayerCfg.WindowY1 = 272;
 	pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
-	pLayerCfg.Alpha = 255;
-	//pLayerCfg.Alpha = 1;
+	pLayerCfg.Alpha = 1;
 	pLayerCfg.Alpha0 = 0;
 	pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
 	pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
-	//pLayerCfg.FBStartAdress = 0;
-	pLayerCfg.FBStartAdress = 0x24000000;
+	pLayerCfg.FBStartAdress = 0;
 	pLayerCfg.ImageWidth = 480;
 	pLayerCfg.ImageHeight = 272;
 	pLayerCfg.Backcolor.Blue = 0;
@@ -749,7 +772,13 @@ static void MX_LTDC_Init(void) {
 		Error_Handler();
 	}
 	/* USER CODE BEGIN LTDC_Init 2 */
-
+	pLayerCfg.FBStartAdress = 0x24020000;
+	pLayerCfg.Alpha = 255;
+	pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
+	pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
+	if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK) {
+		Error_Handler();
+	}
 	/* USER CODE END LTDC_Init 2 */
 
 }
@@ -783,18 +812,18 @@ static void MX_QUADSPI_Init(void) {
 	}
 	/* USER CODE BEGIN QUADSPI_Init 2 */
 	int32_t RetVal;
-	BSP_QSPI_Init_t qspi_initParams;
+	//BSP_QSPI_Init_t qspi_initParams;
 	/* Initialize the NOR QuadSPI flash */
-	if ((RetVal = BSP_QSPI_Init(0, &qspi_initParams)) != BSP_ERROR_NONE) {
-		printf("Failed to initialize the QSPI !! (Error %ld)\n", RetVal);
-		Error_Handler();
-	}
+	/*if ((RetVal = BSP_QSPI_Init(0, &qspi_initParams)) != BSP_ERROR_NONE) {
+	 printf("Failed to initialize the QSPI !! (Error %ld)\n", RetVal);
+	 Error_Handler();
+	 }*/
 
 	/* Enable Memory Mapped Mode */
-	if ((RetVal = BSP_QSPI_EnableMemoryMappedMode(0)) != BSP_ERROR_NONE) {
-		printf("Failed to configure the QSPI !! (Error %ld)\n", RetVal);
-		Error_Handler();
-	}
+	/*if ((RetVal = BSP_QSPI_EnableMemoryMappedMode(0)) != BSP_ERROR_NONE) {
+	 printf("Failed to configure the QSPI !! (Error %ld)\n", RetVal);
+	 Error_Handler();
+	 }*/
 	/* USER CODE END QUADSPI_Init 2 */
 
 }
@@ -1459,6 +1488,26 @@ void StartLoraTask(void *argument) {
 		osDelay(1);
 	}
 	/* USER CODE END StartLoraTask */
+}
+
+/**
+ * @brief  Period elapsed callback in non blocking mode
+ * @note   This function is called  when TIM6 interrupt took place, inside
+ * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ * a global variable "uwTick" used as application time base.
+ * @param  htim : TIM handle
+ * @retval None
+ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	/* USER CODE BEGIN Callback 0 */
+
+	/* USER CODE END Callback 0 */
+	if (htim->Instance == TIM6) {
+		HAL_IncTick();
+	}
+	/* USER CODE BEGIN Callback 1 */
+
+	/* USER CODE END Callback 1 */
 }
 
 /**
