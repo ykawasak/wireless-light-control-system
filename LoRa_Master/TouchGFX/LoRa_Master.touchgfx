@@ -9,18 +9,66 @@
             "Name": "image1",
             "Width": 480,
             "Height": 272,
-            "RelativeFilename": "__generated\\clay_theme_images_backgrounds_480x272_lines.png"
+            "RelativeFilename": "test.png"
           },
           {
-            "Type": "ToggleButton",
-            "Name": "toggleButton1",
-            "X": 185,
+            "Type": "Button",
+            "Name": "button1",
+            "X": 120,
             "Y": 111,
-            "Width": 110,
+            "Width": 240,
             "Height": 50,
-            "Pressed": "__generated\\alternate_theme_images_widgets_togglebutton_medium_round_on_action.png",
-            "Released": "__generated\\alternate_theme_images_widgets_togglebutton_medium_round_off_light.png",
-            "Preset": "alternate_theme\\presets\\togglebutton\\medium\\round_action.json"
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_50_medium_rounded_pressed.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_50_medium_rounded_normal.png",
+            "Preset": "alternate_theme\\presets\\button\\regular\\height_50\\medium_rounded_normal.json"
+          },
+          {
+            "Type": "BoxProgress",
+            "Name": "boxProgress1",
+            "X": 90,
+            "Y": 56,
+            "Width": 300,
+            "Height": 10,
+            "Color": {
+              "Green": 240,
+              "Blue": 255
+            },
+            "Direction": "Right",
+            "Preset": "alternate_theme\\presets\\boxprogress\\normal\\medium_active.json",
+            "FileNameBackground": "__generated\\alternate_theme_images_widgets_boxprogress_normal_medium.png",
+            "IndicatorPositionWidth": 300,
+            "IndicatorPositionHeight": 10,
+            "ProgressRangeMax": 100,
+            "ProgressInitialValue": 60
+          },
+          {
+            "Type": "Slider",
+            "Name": "slider1",
+            "X": 74,
+            "Y": 196,
+            "Width": 332,
+            "Height": 32,
+            "IsHorizontalSlider": true,
+            "BackgroundUnselected": "__generated\\alternate_theme_images_widgets_slider_horizontal_thick_track_medium.png",
+            "BackgroundSelected": "__generated\\alternate_theme_images_widgets_slider_horizontal_thick_filler_medium.png",
+            "Indicator": "__generated\\alternate_theme_images_widgets_slider_horizontal_thick_rounded_dark.png",
+            "BackgroundX": 16,
+            "BackgroundY": 11,
+            "IndicatorMax": 300,
+            "ValueMax": 100,
+            "Preset": "alternate_theme\\presets\\slider\\horizontal\\thick\\medium_rounded_dark.json"
+          },
+          {
+            "Type": "RepeatButton",
+            "Name": "repeatButton1",
+            "X": 120,
+            "Width": 240,
+            "Height": 50,
+            "Pressed": "__generated\\alternate_theme_images_widgets_button_regular_height_50_medium_rounded_pressed.png",
+            "Released": "__generated\\alternate_theme_images_widgets_button_regular_height_50_medium_rounded_normal.png",
+            "Delay": 200,
+            "Interval": 1000,
+            "Preset": "alternate_theme\\presets\\button\\regular\\height_50\\medium_rounded_normal.json"
           }
         ],
         "Interactions": [

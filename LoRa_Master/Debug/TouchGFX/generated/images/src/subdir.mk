@@ -6,15 +6,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../TouchGFX/generated/images/src/BitmapDatabase.cpp \
-../TouchGFX/generated/images/src/SVGDatabase.cpp 
+../TouchGFX/generated/images/src/SVGDatabase.cpp \
+../TouchGFX/generated/images/src/image_sean-oulashin-KMn4VEeEPR8-unsplash.cpp \
+../TouchGFX/generated/images/src/image_test.cpp 
 
 OBJS += \
 ./TouchGFX/generated/images/src/BitmapDatabase.o \
-./TouchGFX/generated/images/src/SVGDatabase.o 
+./TouchGFX/generated/images/src/SVGDatabase.o \
+./TouchGFX/generated/images/src/image_sean-oulashin-KMn4VEeEPR8-unsplash.o \
+./TouchGFX/generated/images/src/image_test.o 
 
 CPP_DEPS += \
 ./TouchGFX/generated/images/src/BitmapDatabase.d \
-./TouchGFX/generated/images/src/SVGDatabase.d 
+./TouchGFX/generated/images/src/SVGDatabase.d \
+./TouchGFX/generated/images/src/image_sean-oulashin-KMn4VEeEPR8-unsplash.d \
+./TouchGFX/generated/images/src/image_test.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +30,7 @@ TouchGFX/generated/images/src/%.o TouchGFX/generated/images/src/%.su TouchGFX/ge
 clean: clean-TouchGFX-2f-generated-2f-images-2f-src
 
 clean-TouchGFX-2f-generated-2f-images-2f-src:
-	-$(RM) ./TouchGFX/generated/images/src/BitmapDatabase.cyclo ./TouchGFX/generated/images/src/BitmapDatabase.d ./TouchGFX/generated/images/src/BitmapDatabase.o ./TouchGFX/generated/images/src/BitmapDatabase.su ./TouchGFX/generated/images/src/SVGDatabase.cyclo ./TouchGFX/generated/images/src/SVGDatabase.d ./TouchGFX/generated/images/src/SVGDatabase.o ./TouchGFX/generated/images/src/SVGDatabase.su
+	-$(RM) ./TouchGFX/generated/images/src/BitmapDatabase.cyclo ./TouchGFX/generated/images/src/BitmapDatabase.d ./TouchGFX/generated/images/src/BitmapDatabase.o ./TouchGFX/generated/images/src/BitmapDatabase.su ./TouchGFX/generated/images/src/SVGDatabase.cyclo ./TouchGFX/generated/images/src/SVGDatabase.d ./TouchGFX/generated/images/src/SVGDatabase.o ./TouchGFX/generated/images/src/SVGDatabase.su ./TouchGFX/generated/images/src/image_sean-oulashin-KMn4VEeEPR8-unsplash.cyclo ./TouchGFX/generated/images/src/image_sean-oulashin-KMn4VEeEPR8-unsplash.d ./TouchGFX/generated/images/src/image_sean-oulashin-KMn4VEeEPR8-unsplash.o ./TouchGFX/generated/images/src/image_sean-oulashin-KMn4VEeEPR8-unsplash.su ./TouchGFX/generated/images/src/image_test.cyclo ./TouchGFX/generated/images/src/image_test.d ./TouchGFX/generated/images/src/image_test.o ./TouchGFX/generated/images/src/image_test.su
 
 .PHONY: clean-TouchGFX-2f-generated-2f-images-2f-src
 

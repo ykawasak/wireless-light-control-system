@@ -119,4 +119,9 @@ void TouchGFXGeneratedHAL::FlushCache()
     }
 }
 
+extern "C" void touchgfxSignalVSync(void)
+{
+    touchgfx::OSWrappers::signalVSync();
+}
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -27,6 +27,8 @@
 #include "string.h"
 #include <stdio.h>
 #include "stm32h750b_discovery_qspi.h"
+#include "FreeRTOS.h"
+#include "task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -107,6 +109,10 @@ const osThreadAttr_t LoraTask_attributes = { .name = "LoraTask", .stack_size =
 osMessageQueueId_t loraQueueHandle;
 const osMessageQueueAttr_t loraQueue_attributes = { .name = "loraQueue" };
 /* USER CODE BEGIN PV */
+// task for touchGFX
+osThreadId_t touchgfxTaskHandle;
+const osThreadAttr_t touchgfxTask_attributes = { .name = "TouchGFXTask",
+		.stack_size = 4096 * 4, .priority = (osPriority_t) osPriorityNormal, };
 
 /* USER CODE END PV */
 
@@ -136,6 +142,7 @@ void StartLoraTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 static void MPU_Config(void);
+extern void touchgfxSignalVSync(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -169,7 +176,18 @@ int main(void) {
 	PeriphCommonClock_Config();
 
 	/* USER CODE BEGIN SysInit */
-	MPU_Config();
+	//MPU_Config();
+	BSP_QSPI_Init_t qspi_initParams;
+	qspi_initParams.InterfaceMode = MT25TL01G_QPI_MODE;
+	qspi_initParams.TransferRate = MT25TL01G_STR_TRANSFER;
+	qspi_initParams.DualFlashMode = MT25TL01G_DUALFLASH_ENABLE;
+
+	if (BSP_QSPI_Init(0, &qspi_initParams) != BSP_ERROR_NONE) {
+		Error_Handler();
+	}
+	if (BSP_QSPI_EnableMemoryMappedMode(0) != BSP_ERROR_NONE) {
+		Error_Handler();
+	}
 	/* USER CODE END SysInit */
 
 	/* Initialize all configured peripherals */
@@ -189,11 +207,11 @@ int main(void) {
 	//MX_SPI2_Init();
 	//MX_USART3_UART_Init();
 	//MX_USB_OTG_FS_PCD_Init();
-	//MX_CRC_Init();
+	MX_CRC_Init();
 	//MX_USART2_UART_Init();
-	//MX_TouchGFX_Init();
+	MX_TouchGFX_Init();
 	/* Call PreOsInit function */
-	//MX_TouchGFX_PreOSInit();
+	MX_TouchGFX_PreOSInit();
 	/* USER CODE BEGIN 2 */
 	GPIO_InitTypeDef g = { 0 };
 	g.Mode = GPIO_MODE_OUTPUT_PP;
@@ -215,28 +233,14 @@ int main(void) {
 	for (volatile uint32_t d = 0; d < 1000000; d++) {
 	}
 
-	BSP_QSPI_Init_t qspi_initParams;
-	qspi_initParams.InterfaceMode = MT25TL01G_QPI_MODE;
-	qspi_initParams.TransferRate = MT25TL01G_STR_TRANSFER;
-	qspi_initParams.DualFlashMode = MT25TL01G_DUALFLASH_ENABLE;
+	extern uint32_t __framebuffer_start__;
+	HAL_LTDC_SetAddress(&hltdc, (uint32_t) &__framebuffer_start__, 0);
+	*(volatile uint32_t*) 0x500010AC = (uint32_t) &__framebuffer_start__; /* L1CFBAR */
+	*(volatile uint32_t*) 0x50001024 = 1; /* SRCR: */
 
-	if (BSP_QSPI_Init(0, &qspi_initParams) != BSP_ERROR_NONE) {
-		Error_Handler();
-	}
-	if (BSP_QSPI_EnableMemoryMappedMode(0) != BSP_ERROR_NONE) {
-		Error_Handler();
-	}
-
-	for (int i = 0; i < 480 * 272; i++) {
-		*((volatile uint16_t*) 0x24020000 + i) = 0xF800;
-	}
-
-	uint32_t t0 = HAL_GetTick();
-	volatile uint32_t t1;
-
-	while (1) {
-		t1 = HAL_GetTick();
-	}
+	HAL_NVIC_SetPriority(LTDC_IRQn, 5, 0);
+	HAL_NVIC_EnableIRQ(LTDC_IRQn);
+	HAL_LTDC_ProgramLineEvent(&hltdc, 272);
 	/* USER CODE END 2 */
 
 	/* Init scheduler */
@@ -273,6 +277,8 @@ int main(void) {
 
 	/* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
+	touchgfxTaskHandle = osThreadNew(TouchGFX_Task, NULL,
+			&touchgfxTask_attributes);
 	/* USER CODE END RTOS_THREADS */
 
 	/* USER CODE BEGIN RTOS_EVENTS */
@@ -739,14 +745,14 @@ static void MX_LTDC_Init(void) {
 	hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
 	hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
 	hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
-	hltdc.Init.HorizontalSync = 7;
-	hltdc.Init.VerticalSync = 3;
-	hltdc.Init.AccumulatedHBP = 14;
-	hltdc.Init.AccumulatedVBP = 5;
-	hltdc.Init.AccumulatedActiveW = 494;
-	hltdc.Init.AccumulatedActiveH = 277;
-	hltdc.Init.TotalWidth = 500;
-	hltdc.Init.TotalHeigh = 279;
+	hltdc.Init.HorizontalSync = 40;
+	hltdc.Init.VerticalSync = 9;
+	hltdc.Init.AccumulatedHBP = 53;
+	hltdc.Init.AccumulatedVBP = 11;
+	hltdc.Init.AccumulatedActiveW = 533;
+	hltdc.Init.AccumulatedActiveH = 283;
+	hltdc.Init.TotalWidth = 565;
+	hltdc.Init.TotalHeigh = 285;
 	hltdc.Init.Backcolor.Blue = 0;
 	hltdc.Init.Backcolor.Green = 0;
 	hltdc.Init.Backcolor.Red = 0;
@@ -772,7 +778,15 @@ static void MX_LTDC_Init(void) {
 		Error_Handler();
 	}
 	/* USER CODE BEGIN LTDC_Init 2 */
-	pLayerCfg.FBStartAdress = 0x24020000;
+	/*pLayerCfg.FBStartAdress = 0x24020000;
+	 pLayerCfg.Alpha = 255;
+	 pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
+	 pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
+	 if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK) {
+	 Error_Handler();
+	 }*/
+	extern uint32_t __framebuffer_start__;
+	pLayerCfg.FBStartAdress = (uint32_t) &__framebuffer_start__;
 	pLayerCfg.Alpha = 255;
 	pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
 	pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
@@ -1446,6 +1460,19 @@ static void MPU_Config(void) {
 	HAL_MPU_ConfigRegion(&MPU_InitStruct);
 
 	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+}
+
+void HAL_LTDC_LineEventCallback(LTDC_HandleTypeDef *hltdc_ptr) {
+	touchgfxSignalVSync();
+	HAL_LTDC_ProgramLineEvent(hltdc_ptr, 272);
+}
+
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
+	(void) xTask;
+	(void) pcTaskName;
+	__BKPT(0); /* ここで止まればスタックオーバーフロー */
+	while (1) {
+	}
 }
 
 /* USER CODE END 4 */

@@ -35,7 +35,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM_D1) + LENGTH(RAM_D1);    /* end of RAM */
+_estack = ORIGIN(DTCMRAM) + LENGTH(DTCMRAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -49,7 +49,7 @@ MEMORY
   RAM_D2 (xrw)   : ORIGIN = 0x30000000, LENGTH = 288K
   RAM_D3 (xrw)   : ORIGIN = 0x38000000, LENGTH = 64K
   ITCMRAM (xrw)  : ORIGIN = 0x00000000, LENGTH = 64K
-  QUADSPI (rx)   : ORIGIN = 0x90000000, LENGTH = 64M
+  QUADSPI (rx)   : ORIGIN = 0x90000000, LENGTH = 128M
 }
 
 /* Define output sections */
@@ -87,7 +87,7 @@ SECTIONS
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >QUADSPI
+  } >FLASH
 
   .ARM.extab (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
@@ -138,7 +138,7 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >RAM_D1
+  } >RAM_D1 AT> FLASH
 
   /* Uninitialized data section */
   . = ALIGN(4);
@@ -165,14 +165,28 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
+  } >DTCMRAM
+  
+  /*AXI SRAM in D1 domain is used*/
+    .framebuffer (NOLOAD) :
+  {
+    . = ALIGN(32);
+    __framebuffer_start__ = .;
+    *(TouchGFX_Framebuffer)
+    . = ALIGN(32);
+    __framebuffer_end__ = .;
   } >RAM_D1
   
-  .framebuffer (NOLOAD) :
+  /* Added .RxDescripSection / .TxDescripSection in main */
+  .lwip_sec (NOLOAD) :
   {
-    . = ALIGN(4);
-    *(TouchGFX_Framebuffer)
-    . = ALIGN(4);
-  } >RAM_D1
+    . = ABSOLUTE(0x30000000);
+    *(.RxDescripSection)
+    . = ABSOLUTE(0x30000100);
+    *(.TxDescripSection)
+    . = ABSOLUTE(0x30000200);
+    *(.Rx_PoolSection)
+  } >RAM_D2
   
   /* TouchGFX */
   ExtFlashSection : { *(ExtFlashSection) } >QUADSPI
@@ -182,9 +196,6 @@ SECTIONS
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {
-    libc.a ( * )
-    libm.a ( * )
-    libgcc.a ( * )
   }
 
   .ARM.attributes 0 : { *(.ARM.attributes) }

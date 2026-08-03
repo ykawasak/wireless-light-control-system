@@ -12,12 +12,34 @@ screenViewBase::screenViewBase()
     add(__background);
 
     image1.setXY(0, 0);
-    image1.setBitmap(touchgfx::Bitmap(BITMAP_CLAY_THEME_IMAGES_BACKGROUNDS_480X272_LINES_ID));
+    image1.setBitmap(touchgfx::Bitmap(BITMAP_TEST_ID));
     add(image1);
 
-    toggleButton1.setXY(185, 111);
-    toggleButton1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_TOGGLEBUTTON_MEDIUM_ROUND_OFF_LIGHT_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_TOGGLEBUTTON_MEDIUM_ROUND_ON_ACTION_ID));
-    add(toggleButton1);
+    button1.setXY(120, 111);
+    button1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_MEDIUM_ROUNDED_NORMAL_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_MEDIUM_ROUNDED_PRESSED_ID));
+    add(button1);
+
+    boxProgress1.setXY(90, 56);
+    boxProgress1.setProgressIndicatorPosition(0, 0, 300, 10);
+    boxProgress1.setRange(0, 100);
+    boxProgress1.setDirection(touchgfx::AbstractDirectionProgress::RIGHT);
+    boxProgress1.setBackground(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BOXPROGRESS_NORMAL_MEDIUM_ID));
+    boxProgress1.setColor(touchgfx::Color::getColorFromRGB(0, 240, 255));
+    boxProgress1.setValue(60);
+    add(boxProgress1);
+
+    slider1.setXY(74, 196);
+    slider1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_SLIDER_HORIZONTAL_THICK_TRACK_MEDIUM_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_SLIDER_HORIZONTAL_THICK_FILLER_MEDIUM_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_SLIDER_HORIZONTAL_THICK_ROUNDED_DARK_ID));
+    slider1.setupHorizontalSlider(16, 11, 0, 0, 300);
+    slider1.setValueRange(0, 100);
+    slider1.setValue(0);
+    add(slider1);
+
+    repeatButton1.setXY(120, 0);
+    repeatButton1.setBitmaps(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_MEDIUM_ROUNDED_NORMAL_ID), touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_WIDGETS_BUTTON_REGULAR_HEIGHT_50_MEDIUM_ROUNDED_PRESSED_ID));
+    repeatButton1.setDelay(12);
+    repeatButton1.setInterval(60);
+    add(repeatButton1);
 }
 
 screenViewBase::~screenViewBase()

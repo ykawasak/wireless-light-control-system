@@ -42,5 +42,6 @@
 ../TouchGFX/target/generated/TouchGFXGeneratedHAL.cpp:91:6:virtual bool TouchGFXGeneratedHAL::blockCopy(void*, const void*, uint32_t)	24	static
 ../TouchGFX/target/generated/TouchGFXGeneratedHAL.cpp:96:6:virtual void TouchGFXGeneratedHAL::InvalidateCache()	32	static,ignoring_inline_asm
 ../TouchGFX/target/generated/TouchGFXGeneratedHAL.cpp:109:6:virtual void TouchGFXGeneratedHAL::FlushCache()	32	static,ignoring_inline_asm
+../TouchGFX/target/generated/TouchGFXGeneratedHAL.cpp:122:17:void touchgfxSignalVSync()	8	static
 ../TouchGFX/target/generated/TouchGFXGeneratedHAL.hpp:30:7:TouchGFXGeneratedHAL::~TouchGFXGeneratedHAL()	16	static
 ../TouchGFX/target/generated/TouchGFXGeneratedHAL.hpp:30:7:virtual TouchGFXGeneratedHAL::~TouchGFXGeneratedHAL()	16	static

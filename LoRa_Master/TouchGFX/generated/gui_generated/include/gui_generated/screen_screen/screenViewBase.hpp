@@ -9,7 +9,10 @@
 #include <gui/screen_screen/screenPresenter.hpp>
 #include <touchgfx/widgets/Box.hpp>
 #include <touchgfx/widgets/Image.hpp>
-#include <touchgfx/widgets/ToggleButton.hpp>
+#include <touchgfx/widgets/Button.hpp>
+#include <touchgfx/containers/progress_indicators/BoxProgress.hpp>
+#include <touchgfx/containers/Slider.hpp>
+#include <touchgfx/widgets/RepeatButton.hpp>
 
 class screenViewBase : public touchgfx::View<screenPresenter>
 {
@@ -28,7 +31,10 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Image image1;
-    touchgfx::ToggleButton toggleButton1;
+    touchgfx::Button button1;
+    touchgfx::BoxProgress boxProgress1;
+    touchgfx::Slider slider1;
+    touchgfx::RepeatButton repeatButton1;
 
 private:
 
